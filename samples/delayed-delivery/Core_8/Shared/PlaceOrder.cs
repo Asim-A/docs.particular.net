@@ -10,3 +10,12 @@ public class PlaceOrder :
 }
 
 #endregion
+
+public class PlaceOrderNew : ICommand
+{
+
+    public Guid Id { get; set; }
+
+    public string Product { get; set; }
+
+}
