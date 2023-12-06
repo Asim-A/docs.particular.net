@@ -1,7 +1,7 @@
-﻿using NServiceBus;
-
-namespace Versioning.Contracts
+﻿namespace Versioning.Contracts
 {
+    using NServiceBus;
+
     public interface ISomethingHappened :
         IEvent
     {

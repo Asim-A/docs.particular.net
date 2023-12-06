@@ -14,13 +14,11 @@ namespace V2.Receiver
         {
             log.Info("Received a v1 message and missing data, do what's needed to retrieve that data");
 
-            context.Publish<DoSomethingMore>(v2 =>
+            return context.Publish<DoSomethingMore>(v2 =>
             {
                 v2.SomeData = message.SomeData;
                 v2.SomeMoreData = 5; // set this value with the retrieved data
-            }).ConfigureAwait(false);
-
-            return Task.CompletedTask;
+            });
         }
     }
 

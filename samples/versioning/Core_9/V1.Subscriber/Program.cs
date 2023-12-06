@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using NServiceBus;
-using Versioning.Contracts;
 
 class Program
 {
@@ -9,22 +8,15 @@ class Program
     {
         Console.Title = "Samples.Versioning.V1.Subscriber";
         var endpointConfiguration = new EndpointConfiguration("Samples.Versioning.V1.Subscriber");
+
         endpointConfiguration.UseSerialization<SystemJsonSerializer>();
-        var routing = endpointConfiguration.UseTransport(new LearningTransport());
+        endpointConfiguration.UseTransport(new LearningTransport());
 
-        #region V1SubscriberMapping
+        var endpointInstance = await Endpoint.Start(endpointConfiguration);
 
-        routing.RegisterPublisher(
-            assembly: typeof(ISomethingHappened).Assembly,
-            publisherEndpoint: "Samples.Versioning.V1Publisher");
-
-        #endregion
-
-        var endpointInstance = await Endpoint.Start(endpointConfiguration)
-            .ConfigureAwait(false);
         Console.WriteLine("Press any key to exit");
         Console.ReadKey();
-        await endpointInstance.Stop()
-            .ConfigureAwait(false);
+
+        await endpointInstance.Stop();
     }
 }

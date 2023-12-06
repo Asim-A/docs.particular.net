@@ -9,7 +9,8 @@ class Program
         Console.Title = "Samples.Versioning.V1Receiver";
         var endpointConfiguration = new EndpointConfiguration("Samples.Versioning.V1Receiver");
         endpointConfiguration.UseSerialization<SystemJsonSerializer>();
-        var transport = endpointConfiguration.UseTransport(new LearningTransport());
+
+        endpointConfiguration.UseTransport(new LearningTransport());
         
         var endpointInstance = await Endpoint.Start(endpointConfiguration);
         Console.WriteLine("Press any key to exit");

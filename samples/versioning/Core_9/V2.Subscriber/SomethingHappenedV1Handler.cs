@@ -10,12 +10,10 @@ public class SomethingHappenedV1Handler : IHandleMessages<ISomethingHappened>
     {
         log.Info("Received a v1 event and missing data, do what's needed to retrieve that data");
 
-        context.Publish<ISomethingMoreHappened>(v2 =>
+        return context.Publish<ISomethingMoreHappened>(v2 =>
         {
             v2.SomeData = message.SomeData;
             v2.MoreInfo = "more info"; // set this value with the retrieved data
-        }).ConfigureAwait(false);
-
-        return Task.CompletedTask;
+        });
     }
 }

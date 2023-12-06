@@ -8,14 +8,11 @@ class Program
     {
         Console.Title = "Samples.Versioning.V2.Publisher";
         var endpointConfiguration = new EndpointConfiguration("Samples.Versioning.V2.Publisher");
-        endpointConfiguration.UsePersistence<NonDurablePersistence>();
         endpointConfiguration.UseSerialization<SystemJsonSerializer>();
-        endpointConfiguration.UseTransport(new MsmqTransport());
-        endpointConfiguration.SendFailedMessagesTo("error");
-        endpointConfiguration.EnableInstallers();
+        endpointConfiguration.UseTransport(new LearningTransport());
 
-        var endpointInstance = await Endpoint.Start(endpointConfiguration)
-            .ConfigureAwait(false);
+        var endpointInstance = await Endpoint.Start(endpointConfiguration);
+
         Console.WriteLine("Press enter to publish a message");
         Console.WriteLine("Press any key to exit");
         while (true)
@@ -32,12 +29,10 @@ class Program
             {
                 sh.SomeData = 1;
                 sh.MoreInfo = "It's a secret.";
-            })
-            .ConfigureAwait(false);
+            });
 
             Console.WriteLine("Published event.");
         }
-        await endpointInstance.Stop()
-            .ConfigureAwait(false);
+        await endpointInstance.Stop();
     }
 }

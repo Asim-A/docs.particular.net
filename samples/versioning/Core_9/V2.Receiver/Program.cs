@@ -8,17 +8,13 @@ class Program
     {
         Console.Title = "Samples.Versioning.V2.Receiver";
         var endpointConfiguration = new EndpointConfiguration("Samples.Versioning.V2.Receiver");
-        endpointConfiguration.UsePersistence<NonDurablePersistence>();
         endpointConfiguration.UseSerialization<SystemJsonSerializer>();
-        var transport = endpointConfiguration.UseTransport(new MsmqTransport());
-        endpointConfiguration.SendFailedMessagesTo("error");
-        endpointConfiguration.EnableInstallers();
-
-        var endpointInstance = await Endpoint.Start(endpointConfiguration)
-                                             .ConfigureAwait(false);
+        endpointConfiguration.UseTransport(new LearningTransport());
+       
+        var endpointInstance = await Endpoint.Start(endpointConfiguration);
         Console.WriteLine("Press any key to exit");
         Console.ReadKey();
-        await endpointInstance.Stop()
-                              .ConfigureAwait(false);
+
+        await endpointInstance.Stop();
     }
 }
