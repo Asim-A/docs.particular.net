@@ -1,7 +1,7 @@
 ---
 title: Priority Queues
 summary: Why priority messages require more than just a queue
-reviewed: 2020-10-15
+reviewed: 2024-01-05
 ---
 
 An endpoint is a collection of handlers that process a specific message type. Some messages might be considered more important than others. As queues generally work according to the First In, First Out (FIFO) principle, those important messages have to wait until all messages that arrived earlier, are processed first.
