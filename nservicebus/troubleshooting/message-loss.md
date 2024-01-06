@@ -1,7 +1,7 @@
 ---
 title: Troubleshooting message loss
 summary: NServiceBus troubleshooting message loss
-reviewed: 2020-10-14
+reviewed: 2024-01-05
 component: core
 ---
 In most cases the cause of message loss is one of the following scenarios:
@@ -22,8 +22,7 @@ Resolve this by:
 
 - Adding the `await` keyword everywhere in the call stack.
 - Most of the time, these issues are highlighted by the compiler as compiler warning; consider enabling "warn as error".
-- If await cannot be used, append `.GetAwaiter().GetResult()`. This is considered a workaround and it's recommend to make the call stack fully asynchronous to prevent potential deadlocks
-
+- If await cannot be used, append `.GetAwaiter().GetResult()`. This is considered a workaround and it's recommended to make the call stack fully asynchronous to prevent potential deadlocks
 
 ## Usage of async void
 
