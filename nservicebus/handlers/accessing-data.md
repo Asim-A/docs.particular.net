@@ -3,12 +3,16 @@ title: Accessing and modifying data from a message handler
 summary: How to access business data from a message handler and sync with message consumption and modifications to NServiceBus-controlled data.
 component: Core
 versions: '[6,)'
-reviewed: 2020-10-06
+reviewed: 2024-01-05
 related:
  - persistence/nhibernate/accessing-data
  - persistence/sql/accessing-data
  - persistence/mongodb
  - persistence/ravendb
+ - persistence/service-fabric
+ - persistence/cosmosdb
+ - persistence/dynamodb
+ - persistence/azure-table
 ---
 
 
@@ -33,6 +37,9 @@ The synchronized storage session feature is supported by most NServiceBus persis
  - [MongoDB](/persistence/mongodb/#transactions-shared-transactions)
  - [RavenDB](/persistence/ravendb/#shared-session)
  - [Service Fabric](/persistence/service-fabric/transaction-sharing.md)
+ - [CosmosDB](/persistence/cosmosdb/transactions.md#sharing-the-transaction)
+ - [DynamoDB](/persistence/dynamodb/transactions.md#dynamodbcontext)
+ - [Azure Table](/persistence/azure-table/transactions.md#sharing-the-transaction)
 
 Synchronized storage session by itself only guarantees that there will be no *partial failures* i.e. cases where one of the handlers has modified its state while another has not. This guarantee extends to [sagas](/nservicebus/sagas/) as they are persisted using the synchronized storage session.
 
@@ -40,7 +47,7 @@ However, the synchronized storage session **does not guarantee that each state c
 
 ### Object/relational mappers
 
-When using an object/relational mapper (ORM) like Entity Framework for data access, there is the ability to either inject the data context object via dependency injection or create a data context on the fly and reuse the connection.
+When using an object/relational mapper (ORM) like [Entity Framework](https://docs.particular.net/samples/transactional-session/aspnetcore-webapi/) for data access, there is the ability to either inject the data context object via dependency injection or create a data context on the fly and reuse the connection.
 
 Creating a data context on the fly means that any other handler will work disconnected from that data context. This is a fairly simple approach, but it is not recommended when messages are processed by more than one handler.
 
@@ -57,7 +64,7 @@ NServiceBus supports multiple message de-duplication strategies that suit a wide
 
 [SQL Server transport](/transports/sql) is unique among NServiceBus transports as it allows using a single SQL Server transaction to modify the application state and send/receive messages. Both NHibernate and SQL persistence automatically detect if the message processing context contains an open transaction. If this transaction points to a database that the persister is configured to use, the synchronized storage session wraps that transport transaction. As a result, the state changes requested by the handlers are committed atomically when consuming the incoming message and sending all outgoing messages. This guarantees that no duplicate messages are created in the system.
 
-[SQL persistence](/persistence/sql/accessing-data.md) can be used in the shared local transaction mode in `SendsAtomicWithReceive` and `TransactionScope` [transaction modes](/transports/transactions.md). [NHibernate persistence](/persistence/nhibernate) can only shared the transaction context with the transport if configured to use `TransactionScope` transaction mode. In both cases, however, the transaction **will not be escalated** to a distributed transaction.
+[SQL persistence](/persistence/sql/accessing-data.md) can be used in the shared local transaction mode in `SendsAtomicWithReceive` and `TransactionScope` [transaction modes](/transports/transactions.md). [NHibernate persistence](/persistence/nhibernate) can only share the transaction context with the transport if configured to use `TransactionScope` transaction mode. In both cases, however, the transaction **will not be escalated** to a distributed transaction.
 
 
 ### Distributed transactions
