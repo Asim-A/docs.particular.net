@@ -1,7 +1,7 @@
 ---
 title: Best practices
 summary: An assortment of best practices presented as DO, DO NOT, and CONSIDER.
-reviewed: 2020-10-01
+reviewed: 2024-01-05
 isLearningPath: true
 ---
 
@@ -20,7 +20,7 @@ The endpoint is also the fundamental unit of deployment for an NServcieBus syste
 
 :heavy_check_mark: **CONSIDER grouping message handlers by SLA**
 
-Different message handlers commonly have very different timing requirements. A back-end, largely asynchronous process may take 30 seconds or more to complete, where nobody will notice or care if it happens to take longer. On the other hand, commands sent directly from the customer UI tend to be processed very quickly, and there is an expectation that processing should complete within a second or two.
+Different message handlers commonly have very [different timing requirements](./concepts/priority-queues.md#different-operational-considerations). A back-end, largely asynchronous process may take 30 seconds or more to complete, where nobody will notice or care if it happens to take longer. On the other hand, commands sent directly from the customer UI tend to be processed very quickly, and there is an expectation that processing should complete within a second or two.
 
 This expected time is the service-level agreement (SLA) for that message handler. It is unwise to group message handlers with different SLAs in the same endpoint because all the handlers share the same queue. When SLAs are mixed, it becomes possible for a 1-second-SLA message to get stuck in line behind a batch of 60-second-SLA messages, causing the SLA of the shorter message to be breached.
 
