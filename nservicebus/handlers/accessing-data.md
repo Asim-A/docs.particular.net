@@ -47,7 +47,7 @@ However, the synchronized storage session **does not guarantee that each state c
 
 ### Object/relational mappers
 
-When using an object/relational mapper (ORM) like [Entity Framework](https://docs.particular.net/samples/transactional-session/aspnetcore-webapi/) for data access, there is the ability to either inject the data context object via dependency injection or create a data context on the fly and reuse the connection.
+When using an object/relational mapper (ORM) like [Entity Framework](/samples/transactional-session/aspnetcore-webapi/) for data access, there is the ability to either inject the data context object via dependency injection or create a data context on the fly and reuse the connection.
 
 Creating a data context on the fly means that any other handler will work disconnected from that data context. This is a fairly simple approach, but it is not recommended when messages are processed by more than one handler.
 
@@ -57,7 +57,7 @@ An alternative option that works with multiple handlers processing a single mess
 
 ## Message de-duplication strategies
 
-NServiceBus supports multiple message de-duplication strategies that suit a wide range of message processing and data storage technologies. 
+NServiceBus supports multiple message de-duplication strategies that suit a wide range of message processing and data storage technologies.
 
 
 ### Local transactions
@@ -104,6 +104,6 @@ and think about the behavior of the message processing:
  - NServiceBus by default defers sending messages until the message handler has finished so the behavior of the code above is as if the call to `Send` **was after** the call to `ModifyState`
  - If outgoing messages are sent before the state change is committed (e.g if the code above used [immediate dispatch](/nservicebus/messaging/send-a-message.md#dispatching-a-message-immediately)) there is a risk of creating *ghost messages* -- messages that carry the state change that has never been made durable
  - If outgoing messages are sent after the state change is committed there is risk of message loss if the send operation fails. To prevent this, the outgoing messages must be re-sent **even if it appears to be a duplicate**
- - If re-sending messages is implemented, multiple copies of the same message may be sent to the downstream endpoints  
+ - If re-sending messages is implemented, multiple copies of the same message may be sent to the downstream endpoints
  - If message identity is used for de-duplication, message IDs must be generated in a deterministic manner
  - If outgoing messages depend on the application state, **the code above is incorrect when messages can get re-ordered** (e.g. by infrastructure failures, [recoverability](/nservicebus/recoverability) or competing consumers)
